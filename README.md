@@ -16,4 +16,4 @@ The current version `v` is `"1.0.+"`
 
 ## getting started
 
-... todo ...
+A simple demo can be run through `sbt test:run`.
