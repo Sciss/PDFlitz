@@ -56,7 +56,7 @@ object Generate {
     def size: Dimension = component.size
     def preferredSize: Dimension = component.preferredSize
   }
-  final case class QuickDraw(size: Dimension)(fun: Graphics2D => Unit) {
+  final case class QuickDraw(size: Dimension)(fun: Graphics2D => Unit) extends Source {
     def render(g: Graphics2D) { fun(g) }
     def preferredSize = size
   }
