@@ -1,10 +1,12 @@
 name := "PDFlitz"
 
-version := "1.0.1"
+version := "1.0.2-SNAPSHOT"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.11.0-RC1"
+
+crossScalaVersions := Seq("2.11.0-RC1", "2.10.3")
 
 description := "A simple action to export GUI components as PDF files"
 
@@ -18,11 +20,14 @@ libraryDependencies in ThisBuild ++= Seq(
   "com.itextpdf" % "itextpdf" % "5.4.1"
 )
 
-libraryDependencies in ThisBuild <+= scalaVersion { sv =>
-  "org.scala-lang" % "scala-swing" % sv
+libraryDependencies in ThisBuild += { val sv = scalaVersion.value
+  if (sv startsWith "2.10")
+    "org.scala-lang" % "scala-swing" % sv
+  else
+    "org.scala-lang.modules" %% "scala-swing" % "1.0.0"
 }
 
-retrieveManaged := true
+// retrieveManaged := true
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
@@ -30,19 +35,18 @@ scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
 publishMavenStyle := true
 
-publishTo <<= version { v =>
-  Some(if (v endsWith "-SNAPSHOT")
+publishTo :=
+  Some(if (version.value endsWith "-SNAPSHOT")
     "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
   else
     "Sonatype Releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
   )
-}
 
 publishArtifact in Test := false
 
 pomIncludeRepository := { _ => false }
 
-pomExtra <<= name { n =>
+pomExtra := { val n = name.value
 <scm>
   <url>git@github.com:Sciss/{n}.git</url>
   <connection>scm:git:git@github.com:Sciss/{n}.git</connection>
