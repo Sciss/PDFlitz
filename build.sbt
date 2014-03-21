@@ -4,9 +4,9 @@ version := "1.0.2-SNAPSHOT"
 
 organization := "de.sciss"
 
-scalaVersion := "2.11.0-RC1"
+scalaVersion := "2.11.0-RC3"
 
-crossScalaVersions := Seq("2.11.0-RC1", "2.10.3")
+crossScalaVersions := Seq("2.11.0-RC3", "2.10.3")
 
 description := "A simple action to export GUI components as PDF files"
 
@@ -24,7 +24,7 @@ libraryDependencies in ThisBuild += { val sv = scalaVersion.value
   if (sv startsWith "2.10")
     "org.scala-lang" % "scala-swing" % sv
   else
-    "org.scala-lang.modules" %% "scala-swing" % "1.0.0"
+    "org.scala-lang.modules" %% "scala-swing" % "1.0.1"
 }
 
 // retrieveManaged := true
