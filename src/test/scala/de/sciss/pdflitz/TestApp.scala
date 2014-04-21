@@ -36,7 +36,7 @@ object TestApp extends SimpleSwingApplication {
 
     foreground  = Color.white
 
-    override protected def paintComponent(g: Graphics2D) {
+    override protected def paintComponent(g: Graphics2D): Unit = {
       val d = size
       g.setPaint(new LinearGradientPaint(0f, 0f, d.width, d.height, Array(0f, 1f), Array(c1, c2)))
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

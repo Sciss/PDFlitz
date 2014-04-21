@@ -1,26 +1,24 @@
-name := "PDFlitz"
+name               := "PDFlitz"
 
-version := "1.0.2-SNAPSHOT"
+version            := "1.1.0"
 
-organization := "de.sciss"
+organization       := "de.sciss"
 
-scalaVersion := "2.11.0-RC3"
+scalaVersion       := "2.11.0"
 
-crossScalaVersions := Seq("2.11.0-RC3", "2.10.3")
+crossScalaVersions := Seq("2.11.0", "2.10.4")
 
-description := "A simple action to export GUI components as PDF files"
+description        := "A simple action to export GUI components as PDF files"
 
-homepage <<= name { n => Some(url("https://github.com/Sciss/" + n)) }
+homepage           := Some(url("https://github.com/Sciss/" + name.value))
 
-licenses := Seq("GPL v3+" -> url("http://www.gnu.org/licenses/gpl-3.0.txt"))
+licenses           := Seq("GPL v3+" -> url("http://www.gnu.org/licenses/gpl-3.0.txt"))
 
 initialCommands in console := """import de.sciss.pdflitz._"""
 
-libraryDependencies in ThisBuild ++= Seq(
-  "com.itextpdf" % "itextpdf" % "5.4.1"
-)
+libraryDependencies += "com.itextpdf" % "itextpdf" % "5.5.0"
 
-libraryDependencies in ThisBuild += { val sv = scalaVersion.value
+libraryDependencies += { val sv = scalaVersion.value
   if (sv startsWith "2.10")
     "org.scala-lang" % "scala-swing" % sv
   else
@@ -29,7 +27,7 @@ libraryDependencies in ThisBuild += { val sv = scalaVersion.value
 
 // retrieveManaged := true
 
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
+scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfuture")
 
 // ---- publishing ----
 

@@ -2,21 +2,9 @@
  *  Generate.scala
  *  (PDFlitz)
  *
- *  Copyright (c) 2013 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2013-2014 Hanns Holger Rutz. All rights reserved.
  *
- *  This software is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License
- *  as published by the Free Software Foundation; either
- *  version 3, june 2007 of the License, or (at your option) any later version.
- *
- *  This software is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- *  General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public
- *  License (gpl.txt) along with this software; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  This software is published under the GNU General Public License v3+
  *
  *
  *  For further information, please contact Hanns Holger Rutz at
@@ -39,25 +27,29 @@ object Generate {
     implicit def fromJava (peer     : JComponent): Source = Java (peer)
     implicit def fromScala(component:  Component): Source = Scala(component)
   }
-  sealed trait Source {
+  trait Source {
     // def peer: JComponent
     def render(g: Graphics2D): Unit
     def size: Dimension
     def preferredSize: Dimension
   }
   final case class Java(peer: JComponent) extends Source {
-    def render(g: Graphics2D) { peer.paint(g) }
+    def render(g: Graphics2D): Unit = peer.paint(g)
     def size: Dimension = peer.getSize
     def preferredSize: Dimension = peer.getPreferredSize
   }
   final case class Scala(component: Component) extends Source {
     // def peer = component.peer
-    def render(g: Graphics2D) { component.peer.paint(g) }
+    def render(g: Graphics2D): Unit = component.peer.paint(g)
     def size: Dimension = component.size
     def preferredSize: Dimension = component.preferredSize
   }
-  final case class QuickDraw(size: Dimension)(fun: Graphics2D => Unit) extends Source {
-    def render(g: Graphics2D) { fun(g) }
+  object QuickDraw {
+    def apply(size: => Dimension)(fun: Graphics2D => Unit): QuickDraw = new QuickDraw(size)(fun)
+  }
+  final class QuickDraw(size0: => Dimension)(fun: Graphics2D => Unit) extends Source {
+    def size = size0
+    def render(g: Graphics2D): Unit = fun(g)
     def preferredSize = size
   }
 
@@ -69,7 +61,8 @@ object Generate {
     * @param margin           additional page margin around drawing
     * @param overwrite        when `true`, allows to write to an existing file which will then be overwritten
     */
-  def apply(file: File, view: Source, usePreferredSize: Boolean = false, margin: Int = 0, overwrite: Boolean = false) {
+  def apply(file: File, view: Source, usePreferredSize: Boolean = false, margin: Int = 0,
+            overwrite: Boolean = false): Unit = {
     require(!file.exists() || overwrite, s"The specified file $file already exists.")
 
     val viewSz    = if (usePreferredSize) view.preferredSize else view.size

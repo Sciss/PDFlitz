@@ -2,21 +2,9 @@
  *  Action.scala
  *  (PDFlitz)
  *
- *  Copyright (c) 2013 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2013-2014 Hanns Holger Rutz. All rights reserved.
  *
- *  This software is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License
- *  as published by the Free Software Foundation; either
- *  version 3, june 2007 of the License, or (at your option) any later version.
- *
- *  This software is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- *  General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public
- *  License (gpl.txt) along with this software; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  This software is published under the GNU General Public License v3+
  *
  *
  *  For further information, please contact Hanns Holger Rutz at
@@ -31,14 +19,17 @@ import java.io.File
 import javax.swing.{JList, DefaultListCellRenderer, Icon, JMenuBar, JMenu, JFrame, JMenuItem}
 import collection.breakOut
 
+object SaveAction {
+  def apply(views: => Iterable[Generate.Source]): SaveAction = new SaveAction(views)
+}
 class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PDF...") {
   /** May be overridden. */
-  protected def prepare(view: Generate.Source) {}
+  protected def prepare(view: Generate.Source) = ()
 
   var usePreferredSize  = false
   var margin            = 0
 
-  def setupMenu(f: JFrame) {
+  def setupMenu(f: JFrame): Unit = {
     val mi  = new JMenuItem(peer)
     val mb  = f.getJMenuBar
     val mb1 = if (mb != null) {
@@ -66,7 +57,7 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
     mb1.add(m, 0)
   }
 
-  def setupMenu(f: Frame) {
+  def setupMenu(f: Frame): Unit = {
     val mi  = new MenuItem(this)
     val mb  = f.menuBar
     val mb1 = if (mb != MenuBar.NoMenuBar) {
@@ -87,7 +78,7 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
     mb1.contents.insert(0, m)
   }
 
-  def apply() {
+  def apply(): Unit = {
     val viewsL = views.toList
     val viewO: Option[Generate.Source] = viewsL match {
       case Nil      => None
@@ -109,7 +100,7 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
               def getIconWidth  = w
               def getIconHeight = h
 
-              def paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+              def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
                 val g2        = g.asInstanceOf[Graphics2D]
                 val atOrig    = g2.getTransform
                 val clipOrig  = g2.getClip
@@ -141,7 +132,7 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
         if (res == Dialog.Result.Ok && selIdx >= 0) Some(viewsL(selIdx)) else None
     }
     viewO foreach { view =>
-      val fDlg  = new FileDialog((null: java.awt.Frame), title, FileDialog.SAVE)
+      val fDlg  = new FileDialog(null: java.awt.Frame, title, FileDialog.SAVE)
       fDlg.setVisible(true)
       val file  = fDlg.getFile
       val dir   = fDlg.getDirectory
