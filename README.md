@@ -12,7 +12,7 @@ To use the library in your project:
 
     "de.sciss" %% "pdflitz" % v
 
-The current version `v` is `"1.1.+"`
+The current version `v` is `"1.2.0"`
 
 ## getting started
 

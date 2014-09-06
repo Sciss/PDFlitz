@@ -13,10 +13,12 @@
 
 package de.sciss.pdflitz
 
-import scala.swing.{Dialog, ScrollPane, ListView, Menu, MenuBar, MenuItem, Frame, Action}
+import de.sciss.swingplus.ListView
+
+import scala.swing.{Dialog, ScrollPane, Menu, MenuBar, MenuItem, Frame, Action}
 import java.awt.{FileDialog, Graphics2D, Graphics, Component}
 import java.io.File
-import javax.swing.{JList, DefaultListCellRenderer, Icon, JMenuBar, JMenu, JFrame, JMenuItem}
+import javax.swing.{Icon, JMenuBar, JMenu, JFrame, JMenuItem}
 import collection.breakOut
 
 object SaveAction {
@@ -114,15 +116,11 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
               }
             }
         })(breakOut)
-        val jr = new DefaultListCellRenderer {
-          override def getListCellRendererComponent(list: JList, value: Any, index: Int, isSelected: Boolean,
-                                                    cellHasFocus: Boolean): java.awt.Component = {
-            val res = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-            setIcon(icons(index))
-            res
-          }
+        val lr = new ListView.LabelRenderer[String] {
+          def configure(list: ListView[_], isSelected: Boolean, focused: Boolean, a: String, index: Int): Unit =
+            component.icon = icons(index)
         }
-        list.renderer = new ListView.Renderer.Wrapped(jr)
+        list.renderer = lr
         list.selectIndices(0)
         list.selection.intervalMode = ListView.IntervalMode.Single
         val scroll  = new ScrollPane(list)
