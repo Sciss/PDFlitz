@@ -2,7 +2,7 @@
  *  Generate.scala
  *  (PDFlitz)
  *
- *  Copyright (c) 2013-2014 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2013-2015 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is published under the GNU General Public License v3+
  *
@@ -19,7 +19,7 @@ import com.itextpdf.text.{Document => IDocument, Rectangle => IRectangle}
 import com.itextpdf.text.pdf.PdfWriter
 import com.itextpdf.awt.PdfGraphics2D
 import scala.swing.Component
-import java.awt.{Graphics2D, Dimension}
+import java.awt.{RenderingHints, Graphics2D, Dimension}
 import language.implicitConversions
 
 object Generate {
@@ -77,7 +77,9 @@ object Generate {
     try {
       val cb = writer.getDirectContent
       val tp = cb.createTemplate(viewSz.width, viewSz.height)
-      val g2 = new PdfGraphics2D(tp, viewSz.width, viewSz.height /*, fontMapper */)
+      // use `onlyShapes = true` until we deal with the font-mapper!
+      val g2 = new PdfGraphics2D(tp, viewSz.width, viewSz.height, true /*, fontMapper */)
+      g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON)
       try {
         view.render(g2)
       } finally {

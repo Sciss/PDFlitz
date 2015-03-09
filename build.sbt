@@ -1,12 +1,12 @@
 name               := "PDFlitz"
 
-version            := "1.2.0"
+version            := "1.2.1"
 
 organization       := "de.sciss"
 
-scalaVersion       := "2.11.2"
+scalaVersion       := "2.11.6"
 
-crossScalaVersions := Seq("2.11.2", "2.10.4")
+crossScalaVersions := Seq("2.11.6", "2.10.5")
 
 description        := "A simple action to export GUI components as PDF files"
 
@@ -18,7 +18,7 @@ initialCommands in console := """import de.sciss.pdflitz._"""
 
 // ---- dependencies ----
 
-lazy val itextVersion       = "5.5.2"
+lazy val itextVersion       = "5.5.5"
 
 lazy val swingPlusVersion   = "0.2.0"
 
@@ -27,8 +27,6 @@ libraryDependencies ++= Seq(
   "com.itextpdf" %  "itextpdf"  % itextVersion,
   "de.sciss"     %% "swingplus" % swingPlusVersion
 )
-
-// retrieveManaged := true
 
 scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture")
 
