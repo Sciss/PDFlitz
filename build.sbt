@@ -1,11 +1,11 @@
 lazy val baseName  = "PDFlitz"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "1.3.0-SNAPSHOT"
+lazy val projectVersion = "1.3.0"
 lazy val mimaVersion    = "1.3.0"
 
 lazy val itextVersion       = "5.5.13"
-lazy val swingPlusVersion   = "0.3.0-SNAPSHOT"
+lazy val swingPlusVersion   = "0.3.0"
 
 lazy val root = project.withId(baseNameL).in(file("."))
   .settings(
