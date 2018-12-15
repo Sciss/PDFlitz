@@ -13,20 +13,20 @@
 
 package de.sciss.pdflitz
 
-import de.sciss.swingplus.ListView
-
-import scala.swing.{Dialog, ScrollPane, Menu, MenuBar, MenuItem, Frame, Action}
-import java.awt.{FileDialog, Graphics2D, Graphics, Component}
+import java.awt.{Component, FileDialog, Graphics, Graphics2D}
 import java.io.File
-import javax.swing.{Icon, JMenuBar, JMenu, JFrame, JMenuItem}
-import collection.breakOut
+
+import de.sciss.swingplus.ListView
+import javax.swing.{Icon, JFrame, JMenu, JMenuBar, JMenuItem}
+
+import scala.swing.{Action, Dialog, Frame, Menu, MenuBar, MenuItem, ScrollPane}
 
 object SaveAction {
   def apply(views: => Iterable[Generate.Source]): SaveAction = new SaveAction(views)
 }
 class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PDF...") {
   /** May be overridden. */
-  protected def prepare(view: Generate.Source) = ()
+  protected def prepare(view: Generate.Source): Unit = ()
 
   var usePreferredSize  = false
   var margin            = 0
@@ -35,7 +35,8 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
     val mi  = new JMenuItem(peer)
     val mb  = f.getJMenuBar
     val mb1 = if (mb != null) {
-      for (i <- 0 until mb.getMenuCount) {
+      var i = 0
+      while (i < mb.getMenuCount) {
         val m = mb.getMenu(i)
         if (m.getName == "File") {
           var k = 0
@@ -46,6 +47,7 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
           m.insert(mi, k)
           return
         }
+        i += 1
       }
       mb
     } else {
@@ -63,10 +65,12 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
     val mi  = new MenuItem(this)
     val mb  = f.menuBar
     val mb1 = if (mb != MenuBar.NoMenuBar) {
-      mb.menus.find(_.name == "File").foreach { m =>
-        val i = m.contents.lastIndexWhere(_.name.startsWith("Save")) + 1
-        m.contents.insert(i, mi)
-        return
+      mb.menus.find(_.name == "File") match {
+        case Some(_m) =>
+          val i = _m.contents.lastIndexWhere(_.name.startsWith("Save")) + 1
+          _m.contents.insert(i, mi)
+          return
+        case None =>
       }
       mb
     } else {
@@ -96,26 +100,25 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
           h       = math.max(h, ph)
         }
         val list  = new ListView((1 to viewsL.size).map(i => s"#$i"))
-        val icons = viewsL.zipWithIndex.map({
-          case (view, idx) =>
-            new Icon {
-              def getIconWidth  = w
-              def getIconHeight = h
+        val icons = viewsL.iterator.map { view =>
+          new Icon {
+            def getIconWidth  : Int = w
+            def getIconHeight : Int = h
 
-              def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
-                val g2        = g.asInstanceOf[Graphics2D]
-                val atOrig    = g2.getTransform
-                val clipOrig  = g2.getClip
-                g2.clipRect(x, y, w, h)
-                g2.translate(x, y)
-                g2.scale(0.125, 0.125)
-                prepare(view)
-                view.render(g2)
-                g2.setTransform(atOrig)
-                g2.setClip(clipOrig)
-              }
+            def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
+              val g2        = g.asInstanceOf[Graphics2D]
+              val atOrig    = g2.getTransform
+              val clipOrig  = g2.getClip
+              g2.clipRect(x, y, w, h)
+              g2.translate(x, y)
+              g2.scale(0.125, 0.125)
+              prepare(view)
+              view.render(g2)
+              g2.setTransform(atOrig)
+              g2.setClip(clipOrig)
             }
-        })(breakOut)
+          }
+        } .toIndexedSeq
         val lr = new ListView.LabelRenderer[String] {
           def configure(list: ListView[_], isSelected: Boolean, focused: Boolean, a: String, index: Int): Unit =
             component.icon = icons(index)
@@ -129,15 +132,18 @@ class SaveAction(views: => Iterable[Generate.Source]) extends Action("Save As PD
         val selIdx  = list.selection.leadIndex
         if (res == Dialog.Result.Ok && selIdx >= 0) Some(viewsL(selIdx)) else None
     }
-    viewO foreach { view =>
-      val fDlg  = new FileDialog(null: java.awt.Frame, title, FileDialog.SAVE)
-      fDlg.setVisible(true)
-      val file  = fDlg.getFile
-      val dir   = fDlg.getDirectory
-      if (file == null) return
-      val fileExt = if (file.endsWith(".pdf")) file else file + ".pdf"
-      prepare(view)
-      Generate(new File(dir, fileExt), view, usePreferredSize = usePreferredSize, margin = margin, overwrite = true)
+    viewO match {
+      case Some(view) =>
+        val fDlg  = new FileDialog(null: java.awt.Frame, title, FileDialog.SAVE)
+        fDlg.setVisible(true)
+        val file  = fDlg.getFile
+        val dir   = fDlg.getDirectory
+        if (file == null) return
+        val fileExt = if (file.endsWith(".pdf")) file else file + ".pdf"
+        prepare(view)
+        Generate(new File(dir, fileExt), view, usePreferredSize = usePreferredSize, margin = margin, overwrite = true)
+
+      case None =>
     }
   }
 }

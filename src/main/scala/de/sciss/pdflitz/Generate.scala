@@ -13,14 +13,16 @@
 
 package de.sciss.pdflitz
 
-import java.io.{FileOutputStream, File}
-import javax.swing.JComponent
-import com.itextpdf.text.{Document => IDocument, Rectangle => IRectangle}
-import com.itextpdf.text.pdf.PdfWriter
+import java.awt.{Dimension, Graphics2D, RenderingHints}
+import java.io.{File, FileOutputStream}
+
 import com.itextpdf.awt.PdfGraphics2D
+import com.itextpdf.text.pdf.PdfWriter
+import com.itextpdf.text.{Document => IDocument, Rectangle => IRectangle}
+import javax.swing.JComponent
+
+import scala.language.implicitConversions
 import scala.swing.Component
-import java.awt.{RenderingHints, Graphics2D, Dimension}
-import language.implicitConversions
 
 object Generate {
   object Source {
@@ -48,9 +50,9 @@ object Generate {
     def apply(size: => Dimension)(fun: Graphics2D => Unit): QuickDraw = new QuickDraw(size)(fun)
   }
   final class QuickDraw(size0: => Dimension)(fun: Graphics2D => Unit) extends Source {
-    def size = size0
+    def size: Dimension = size0
     def render(g: Graphics2D): Unit = fun(g)
-    def preferredSize = size
+    def preferredSize: Dimension = size
   }
 
   /** Generates a PDF file from a given view source.
