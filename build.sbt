@@ -1,13 +1,13 @@
 lazy val baseName  = "PDFlitz"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "1.4.0-SNAPSHOT"
+lazy val projectVersion = "1.4.0"
 lazy val mimaVersion    = "1.4.0"
 
 lazy val deps = new {
   val main = new {
     val itext       = "5.5.13"
-    val swingPlus   = "0.4.0-SNAPSHOT"
+    val swingPlus   = "0.4.0"
   }
 }
 
