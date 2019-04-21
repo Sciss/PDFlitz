@@ -1,13 +1,13 @@
 lazy val baseName  = "PDFlitz"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "1.4.0"
+lazy val projectVersion = "1.4.1"
 lazy val mimaVersion    = "1.4.0"
 
 lazy val deps = new {
   val main = new {
     val itext       = "5.5.13"
-    val swingPlus   = "0.4.0"
+    val swingPlus   = "0.4.2"
   }
 }
 
@@ -16,8 +16,8 @@ lazy val root = project.withId(baseNameL).in(file("."))
     name               := baseName,
     version            := projectVersion,
     organization       := "de.sciss",
-    scalaVersion       := "2.13.0-M5",
-    crossScalaVersions := Seq("2.12.8", "2.11.12", "2.13.0-M5"),
+    scalaVersion       := "2.12.8",
+    crossScalaVersions := Seq("2.12.8", "2.11.12", "2.13.0-RC1"),
     description        := "A simple action to export GUI components as PDF files",
     homepage           := Some(url(s"https://git.iem.at/sciss/${name.value}")),
     licenses           := Seq("GPL v3+" -> url("http://www.gnu.org/licenses/gpl-3.0.txt")),
@@ -26,7 +26,8 @@ lazy val root = project.withId(baseNameL).in(file("."))
       "com.itextpdf" %  "itextpdf"  % deps.main.itext,
       "de.sciss"     %% "swingplus" % deps.main.swingPlus
     ),
-    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture", "-Xlint")
+    scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
+    mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion)
   )
   .settings(publishSettings)
 
