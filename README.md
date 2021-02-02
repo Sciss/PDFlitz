@@ -1,11 +1,11 @@
 # PDFlitz
 
-[![Build Status](https://travis-ci.org/Sciss/PDFlitz.svg?branch=main)](https://travis-ci.org/Sciss/PDFlitz)
+[![Build Status](https://github.com/Sciss/PDFlitz/workflows/Scala%20CI/badge.svg?branch=main)](https://github.com/Sciss/PDFlitz/actions?query=workflow%3A%22Scala+CI%22)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/pdflitz_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/pdflitz_2.13)
 
 ## statement
 
-PDFlitz is a small glue code to the iTextPDF library, allowing the export of any Java or Scala Swing component as PDF file. It is (C)opyright 2013&ndash;2019 by Hanns Holger Rutz. All rights reserved. PDFlitz is released under the [GNU Affero General Public License](https://raw.github.com/Sciss/PDFlitz/main/LICENSE) v3+ and comes with absolutely no warranties. To contact the author, send an e-mail to `contact at sciss.de`.
+PDFlitz is a small glue code to the iTextPDF library, allowing the export of any Java or Scala Swing component as PDF file. It is (C)opyright 2013&ndash;2021 by Hanns Holger Rutz. All rights reserved. PDFlitz is released under the [GNU Affero General Public License](https://raw.github.com/Sciss/PDFlitz/main/LICENSE) v3+ and comes with absolutely no warranties. To contact the author, send an e-mail to `contact at sciss.de`.
 
 ## requirements / installation
 
